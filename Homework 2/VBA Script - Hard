@@ -1,0 +1,116 @@
+Sub Ticker():
+
+Dim Max_i As Long
+Dim Ticker_Count As Integer
+Dim Oprice As Double
+Dim Cprice As Double
+Dim Yearly_Change As Double
+Dim Perc_Change As Double
+Dim Tot_Volume As LongLong
+Dim i As Long
+Dim k As Long
+Dim j As Long
+    
+Max_i = ActiveSheet.UsedRange.Rows.Count
+
+Ticker_Count = 2
+Tot_Volume = 0
+
+    For i = 2 To Max_i
+    
+    For k = 0 To 261
+    
+    Oprice = Cells(i, 3).Value
+    Cprice = Cells(i + k, 6).Value
+    Yearly_Change = Cprice - Oprice
+    
+    If Oprice = 0 Then
+        Perc_Change = 0
+    Else
+        Perc_Change = Yearly_Change / Oprice
+    End If
+
+        
+        If Cells(i, 1).Value <> Cells(i - 1, 1).Value And Cells(i + k, 1).Value <> Cells(i + k + 1, 1).Value Then
+            Cells(Ticker_Count, 9).Value = Cells(i, 1).Value
+            Cells(Ticker_Count, 10).Value = Yearly_Change
+            Cells(Ticker_Count, 11).Value = Perc_Change
+            For j = 0 To k
+                Tot_Volume = Tot_Volume + Cells(i + j, 7).Value
+            Next j
+            Cells(Ticker_Count, 12).Value = Tot_Volume
+                Tot_Volume = 0
+            Ticker_Count = Ticker_Count + 1
+    
+        End If
+    
+    Next k
+    
+    Next i
+
+End Sub
+
+Sub Greatest():
+
+Dim i As Long
+Dim j As Long
+Dim k As Long
+Dim Max_i As Long
+Dim Great_Inc As Double
+Dim Inc_Ticker As String
+Dim Great_Dec As Double
+Dim Dec_Ticker As String
+Dim Great_Vol As LongLong
+Dim Vol_Ticker As String
+
+Max_i = ActiveSheet.UsedRange.Rows.Count
+
+Great_Inc = 0
+Great_Dec = 0
+Great_Vol = 0
+
+If IsEmpty(ActiveSheet.Range("I2").Value) = True Then
+    MsgBox ("HOLD UP!  Please consolidate stock data first by running the Yearly Change Report")
+Else
+
+    For i = 2 To Max_i
+    
+        If Cells(i, 11).Value > Great_Inc Then
+            Great_Inc = Cells(i, 11).Value
+            Inc_Ticker = Cells(i, 9).Value
+        End If
+
+    Next i
+    
+        Range("P2").Value = Great_Inc
+        Range("O2").Value = Inc_Ticker
+
+    For j = 2 To Max_i
+    
+        If Cells(j, 11).Value < Great_Dec Then
+            Great_Dec = Cells(j, 11).Value
+            Dec_Ticker = Cells(j, 9).Value
+        End If
+
+    Next j
+
+        Range("P3").Value = Great_Dec
+        Range("O3").Value = Dec_Ticker
+        
+    For k = 2 To Max_i
+    
+        If Cells(k, 12).Value > Great_Vol Then
+            Great_Vol = Cells(k, 12).Value
+            Vol_Ticker = Cells(k, 9).Value
+        End If
+
+    Next k
+        
+        Range("P4").Value = Great_Vol
+        Range("O4").Value = Vol_Ticker
+
+End If
+
+End Sub
+
+
