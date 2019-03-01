@@ -1,6 +1,6 @@
 # *** PyBank ***
 
-# Importing the csv file
+# Importing the csv module to read the file
 import os
 
 import csv
@@ -26,7 +26,7 @@ with open(csvpath, newline='') as csvfile:
     csv_header = next(csvreader)
 
     for row in csvreader:
-        # Counting Rows for total months
+        # Counting rows for Total Months
         Month_Counter += 1
         # Adding all P/L together
         Tot_Profits += int(row[1])
